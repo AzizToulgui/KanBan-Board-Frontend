@@ -18,31 +18,35 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
+function applyThemeToDocument(theme: Theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("dark"); // default to dark
+  const [theme, setTheme] = useState<Theme>("dark");
 
   useEffect(() => {
-    // Load saved theme
     const savedTheme = localStorage.getItem("theme") as Theme | null;
-    const initialTheme = savedTheme || "dark";
+    const initialTheme = savedTheme ?? "dark";
 
     setTheme(initialTheme);
-    document.documentElement.setAttribute("data-theme", initialTheme);
+    applyThemeToDocument(initialTheme);
   }, []);
 
   const applyTheme = (newTheme: Theme) => {
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
+    applyThemeToDocument(newTheme);
   };
 
   const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    applyTheme(newTheme);
+    applyTheme(theme === "light" ? "dark" : "light");
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme: applyTheme, toggleTheme }}>
+    <ThemeContext.Provider
+      value={{ theme, setTheme: applyTheme, toggleTheme }}
+    >
       {children}
     </ThemeContext.Provider>
   );

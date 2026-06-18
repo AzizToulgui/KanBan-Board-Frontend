@@ -50,8 +50,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={jetbrainsMono.variable}
-      data-theme-preset="tangerine"
-      data-theme="dark" // ← Added
+      data-theme="dark"
       suppressHydrationWarning
     >
       <body className="font-sans antialiased">

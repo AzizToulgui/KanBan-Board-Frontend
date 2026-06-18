@@ -102,7 +102,7 @@ export function TicketDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <div className="flex items-center gap-2">
             {isEdit && ticket && (
@@ -133,6 +133,7 @@ export function TicketDialog({
               autoFocus
               placeholder="e.g. Implement OAuth login flow"
               onChange={(e) => setTitle(e.target.value)}
+              className="min-w-0"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleSave();
               }}
@@ -147,7 +148,7 @@ export function TicketDialog({
               placeholder="Add more detail to this ticket..."
               rows={4}
               onChange={(e) => setDescription(e.target.value)}
-              className="resize-none"
+              className="max-h-40 resize-none break-words"
             />
           </div>
 
@@ -181,7 +182,7 @@ export function TicketDialog({
 
             <div className="flex flex-col gap-1.5">
               <Label>Assignee</Label>
-              <Select value={assignee} onValueChange={setAssignee}>
+              <Select value={assignee} onValueChange={(v) => setAssignee(v ?? UNASSIGNED)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>

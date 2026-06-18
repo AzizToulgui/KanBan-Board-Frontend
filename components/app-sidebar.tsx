@@ -7,6 +7,7 @@ import { displayName } from "@/lib/board-utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -114,21 +115,24 @@ export function AppSidebar() {
             <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>My account</DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>My account</DropdownMenuLabel>
+              <DropdownMenuItem>
+                <Settings className="size-4" />
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Users className="size-4" />
+                Manage team
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Settings className="size-4" />
-              Settings
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Users className="size-4" />
-              Manage team
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">
-              <LogOut className="size-4" />
-              Sign out
-            </DropdownMenuItem>
+            <DropdownMenuGroup>
+              <DropdownMenuItem variant="destructive">
+                <LogOut className="size-4" />
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

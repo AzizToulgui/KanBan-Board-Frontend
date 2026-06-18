@@ -46,6 +46,7 @@ function Button({
   variant = "default",
   size = "default",
   asChild = false,
+  nativeButton: _nativeButton,
   ...props
 }: ButtonProps) {
   const Comp = asChild ? Slot : ButtonPrimitive;

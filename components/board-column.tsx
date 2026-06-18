@@ -85,13 +85,11 @@ export function BoardColumnView({
             <Plus className="size-4" />
           </button>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-                aria-label="Column options"
-              >
-                <MoreHorizontal className="size-4" />
-              </button>
+            <DropdownMenuTrigger
+              className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              aria-label="Column options"
+            >
+              <MoreHorizontal className="size-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-44">
               <DropdownMenuItem onSelect={() => setEditing(true)}>

@@ -32,8 +32,8 @@ export function NewProjectDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <Button className="gap-2">New Project</Button>
+      <DialogTrigger render={<Button className="gap-2" />}>
+        New Project
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

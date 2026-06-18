@@ -43,7 +43,7 @@ export function UserAvatar({
       className={cn(sizeMap[size], ring && "ring-2 ring-background", className)}
     >
       <AvatarFallback
-        className="font-medium text-white"
+        className="font-semibold !text-white"
         style={{ backgroundColor: avatarColor(user.id) }}
         title={user.name ?? user.email}
       >

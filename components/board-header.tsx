@@ -56,10 +56,8 @@ export function BoardHeader({
             <div className="flex items-center -space-x-2">
               {visibleMembers.map((m) => (
                 <Tooltip key={m.id}>
-                  <TooltipTrigger asChild>
-                    <span>
-                      <UserAvatar user={m} size="md" ring />
-                    </span>
+                  <TooltipTrigger className="inline-flex rounded-full border-0 bg-transparent p-0 shadow-none outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    <UserAvatar user={m} size="md" ring />
                   </TooltipTrigger>
                   <TooltipContent>
                     {displayName(m)}

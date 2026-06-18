@@ -15,16 +15,17 @@ export function displayName(user: User | undefined | null): string {
   return user.name ?? user.email;
 }
 
-// Deterministic avatar background color from a user id (uses chart tokens)
-const avatarTokens = [
-  "var(--chart-1)",
-  "var(--chart-2)",
-  "var(--chart-3)",
-  "var(--chart-4)",
-  "var(--chart-5)",
+const avatarColors = [
+  "#c2410c",
+  "#0369a1",
+  "#15803d",
+  "#7e22ce",
+  "#be123c",
+  "#b45309",
 ];
+
 export function avatarColor(id: number): string {
-  return avatarTokens[id % avatarTokens.length];
+  return avatarColors[id % avatarColors.length];
 }
 
 export const priorityConfig: Record<
@@ -33,26 +34,26 @@ export const priorityConfig: Record<
 > = {
   low: {
     label: "Low",
-    dot: "bg-muted-foreground/50",
+    dot: "bg-muted-foreground/60",
     text: "text-muted-foreground",
     bg: "bg-muted",
   },
   medium: {
     label: "Medium",
-    dot: "bg-chart-2",
-    text: "text-chart-2",
-    bg: "bg-chart-2/10",
+    dot: "bg-sky-500",
+    text: "text-sky-700 dark:text-sky-300",
+    bg: "bg-sky-500/10",
   },
   high: {
     label: "High",
-    dot: "bg-chart-4",
-    text: "text-chart-4",
-    bg: "bg-chart-4/10",
+    dot: "bg-orange-500",
+    text: "text-orange-700 dark:text-orange-300",
+    bg: "bg-orange-500/10",
   },
   urgent: {
     label: "Urgent",
-    dot: "bg-destructive",
-    text: "text-destructive",
-    bg: "bg-destructive/10",
+    dot: "bg-red-600",
+    text: "text-red-700 dark:text-red-400",
+    bg: "bg-red-500/10",
   },
 };

@@ -53,11 +53,9 @@ export function InviteDialog() {
         if (!v) setFeedback(null);
       }}
     >
-      <DialogTrigger asChild>
-        <Button size="sm" className="h-9 gap-1.5">
-          <UserPlus className="size-4" />
-          <span className="hidden sm:inline">Invite</span>
-        </Button>
+      <DialogTrigger render={<Button size="sm" className="h-9 gap-1.5" />}>
+        <UserPlus className="size-4" />
+        <span className="hidden sm:inline">Invite</span>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>

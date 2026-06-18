@@ -15,19 +15,6 @@ export function displayName(user: User | undefined | null): string {
   return user.name ?? user.email;
 }
 
-const avatarColors = [
-  "#c2410c",
-  "#0369a1",
-  "#15803d",
-  "#7e22ce",
-  "#be123c",
-  "#b45309",
-];
-
-export function avatarColor(id: number): string {
-  return avatarColors[id % avatarColors.length];
-}
-
 export const priorityConfig: Record<
   TicketPriority,
   { label: string; dot: string; text: string; bg: string }

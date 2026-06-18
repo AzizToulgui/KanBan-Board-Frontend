@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BoardProvider } from "@/components/board-provider";
 import { AppSidebar } from "@/components/app-sidebar";
 import { BoardHeader } from "@/components/board-header";
 import { KanbanBoard } from "@/components/kanban-board";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export default function Dashboard() {
   const [search, setSearch] = useState("");
@@ -20,27 +23,28 @@ export default function Dashboard() {
     setCurrentUser(JSON.parse(stored));
   }, []);
 
-  if (!currentUser) {
+  if (!currentUser)
     return (
-      <div className="flex h-screen items-center justify-center bg-zinc-950 text-white">
-        Redirecting...
+      <div className="flex h-screen items-center justify-center">
+        Loading...
       </div>
     );
-  }
 
   return (
-    <BoardProvider currentUser={currentUser}>
-      <TooltipProvider>
-        <div className="flex h-svh overflow-hidden bg-background text-foreground">
-          <AppSidebar />
-          <div className="flex min-w-0 flex-1 flex-col">
-            <BoardHeader search={search} onSearchChange={setSearch} />
-            <main className="min-h-0 flex-1 overflow-hidden">
-              <KanbanBoard search={search} />
-            </main>
+    <QueryClientProvider client={queryClient}>
+      <BoardProvider currentUser={currentUser}>
+        <TooltipProvider>
+          <div className="flex h-svh overflow-hidden bg-background text-foreground">
+            <AppSidebar />
+            <div className="flex min-w-0 flex-1 flex-col">
+              <BoardHeader search={search} onSearchChange={setSearch} />
+              <main className="min-h-0 flex-1 overflow-hidden">
+                <KanbanBoard search={search} />
+              </main>
+            </div>
           </div>
-        </div>
-      </TooltipProvider>
-    </BoardProvider>
+        </TooltipProvider>
+      </BoardProvider>
+    </QueryClientProvider>
   );
 }

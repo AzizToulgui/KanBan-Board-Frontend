@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { avatarColor, initials } from "@/lib/board-utils";
+import { initials } from "@/lib/board-utils";
 import type { User } from "@/lib/types";
 
 const sizeMap = {
@@ -43,8 +43,7 @@ export function UserAvatar({
       className={cn(sizeMap[size], ring && "ring-2 ring-background", className)}
     >
       <AvatarFallback
-        className="font-semibold !text-white"
-        style={{ backgroundColor: avatarColor(user.id) }}
+        className="font-semibold text-white! bg-primary"
         title={user.name ?? user.email}
       >
         {initials(user.name, user.email)}

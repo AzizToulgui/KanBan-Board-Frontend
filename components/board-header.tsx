@@ -22,7 +22,15 @@ export function BoardHeader({
   onSearchChange: (value: string) => void;
 }) {
   const { projects, activeProjectId, projectMembersList, getUser } = useBoard();
-  const project = projects.find((p) => p.id === activeProjectId)!;
+  const project = projects.find((p) => p.id === activeProjectId);
+
+  if (!project) {
+    return (
+      <header className="border-b border-border bg-card p-4 text-sm text-muted-foreground">
+        No project selected. Please select a project from the sidebar.
+      </header>
+    );
+  }
   const owner = getUser(project.ownerId);
 
   const visibleMembers = projectMembersList.slice(0, 5);

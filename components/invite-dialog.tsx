@@ -20,28 +20,39 @@ import { Check, UserPlus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function InviteDialog() {
-  const {
-    projectMembersList,
-    inviteMember,
-    getUser,
-    projects,
-    activeProjectId,
-  } = useBoard();
+  const { projectMembersList, inviteMember, projects, activeProjectId } =
+    useBoard();
+
   const project = projects.find((p) => p.id === activeProjectId)!;
+
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<{
     ok: boolean;
     message: string;
   } | null>(null);
 
-  function handleInvite() {
-    const result = inviteMember(email, name);
-    setFeedback(result);
-    if (result.ok) {
+  async function handleInvite() {
+    if (!email.trim()) return;
+
+    try {
+      setLoading(true);
+
+      const { user } = await inviteMember(activeProjectId, email);
+
+      setFeedback({
+        ok: true,
+        message: `${user.name} invited successfully`,
+      });
       setEmail("");
-      setName("");
+    } catch (err) {
+      setFeedback({
+        ok: false,
+        message: "Failed to invite user",
+      });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -50,12 +61,17 @@ export function InviteDialog() {
       open={open}
       onOpenChange={(v) => {
         setOpen(v);
-        if (!v) setFeedback(null);
+        if (!v) {
+          setFeedback(null);
+          setEmail("");
+        }
       }}
     >
-      <DialogTrigger render={<Button size="sm" className="h-9 gap-1.5" />}>
-        <UserPlus className="size-4" />
-        <span className="hidden sm:inline">Invite</span>
+      <DialogTrigger asChild>
+        <Button size="sm" className="h-9 gap-1.5">
+          <UserPlus className="size-4" />
+          <span className="hidden sm:inline">Invite</span>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
@@ -77,20 +93,9 @@ export function InviteDialog() {
                 setEmail(e.target.value);
                 setFeedback(null);
               }}
-              onKeyDown={(e) => e.key === "Enter" && handleInvite()}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="invite-name">
-              Full name{" "}
-              <span className="text-muted-foreground">(optional)</span>
-            </Label>
-            <Input
-              id="invite-name"
-              placeholder="Jane Doe"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleInvite()}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleInvite();
+              }}
             />
           </div>
 
@@ -112,32 +117,15 @@ export function InviteDialog() {
             </div>
           )}
 
-          <div>
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              {projectMembersList.length} member
-              {projectMembersList.length === 1 ? "" : "s"}
-            </p>
-            <ul className="flex max-h-44 flex-col gap-1 overflow-y-auto">
-              {projectMembersList.map((m) => (
-                <li
-                  key={m.id}
-                  className="flex items-center gap-2.5 rounded-md px-1 py-1.5"
-                >
-                  <UserAvatar user={m} size="md" />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-foreground">
-                      {displayName(m)}
-                    </p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {m.email}
-                    </p>
-                  </div>
-                  <span className="rounded-md border border-border px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
-                    {m.id === project.ownerId ? "Owner" : "Member"}
-                  </span>
-                </li>
-              ))}
-            </ul>
+          <div className="flex items-center -space-x-2">
+            {projectMembersList.slice(0, 5).map((m) => (
+              <UserAvatar
+                key={m.id}
+                user={m}
+                size="lg"
+                className="ring-2 ring-background"
+              />
+            ))}
           </div>
         </div>
 
@@ -145,8 +133,9 @@ export function InviteDialog() {
           <Button variant="outline" onClick={() => setOpen(false)}>
             Done
           </Button>
-          <Button onClick={handleInvite} disabled={!email.trim()}>
-            Send invite
+
+          <Button onClick={handleInvite} disabled={!email.trim() || loading}>
+            {loading ? "Sending..." : "Send invite"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -52,12 +52,12 @@ export function TicketCard({
         </span>
       </div>
 
-      <p className="line-clamp-2 break-words text-sm font-medium leading-snug text-card-foreground">
+      <p className="line-clamp-2 wrap-break-word text-sm font-medium leading-snug text-card-foreground">
         {ticket.title}
       </p>
 
       {ticket.description ? (
-        <p className="mt-1 line-clamp-2 break-words text-xs leading-relaxed text-muted-foreground">
+        <p className="mt-1 line-clamp-2 wrap-break-word text-xs leading-relaxed text-muted-foreground">
           {ticket.description}
         </p>
       ) : null}

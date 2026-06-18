@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { KanbanSquare, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import * as api from "@/lib/api";
 
 export default function SignUpPage() {
   const [name, setName] = useState("");
@@ -20,20 +21,25 @@ export default function SignUpPage() {
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
 
-    setTimeout(() => {
-      const newUser = {
-        id: Date.now(),
-        name: name || "New User",
-        email,
-      };
-      localStorage.setItem("currentUser", JSON.stringify(newUser));
+    try {
+      const user = await api.register({ name, email, password });
+      // Auto login after register
+      const loginData = await api.login(email, password);
+      localStorage.setItem("token", loginData.access_token);
+      localStorage.setItem("currentUser", JSON.stringify(loginData.user));
       window.location.href = "/";
-    }, 800);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -62,14 +68,14 @@ export default function SignUpPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSignUp} className="space-y-5">
+              {error && <p className="text-red-500 text-sm">{error}</p>}
+
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
                 <Input
                   id="name"
-                  placeholder="Alex Rivera"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="bg-zinc-950 border-zinc-800 h-11"
                   required
                 />
               </div>
@@ -79,10 +85,8 @@ export default function SignUpPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@company.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-zinc-950 border-zinc-800 h-11"
                   required
                 />
               </div>
@@ -93,37 +97,28 @@ export default function SignUpPage() {
                   <Input
                     id="password"
                     type={showPass ? "text" : "password"}
-                    placeholder="Create a strong password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="bg-zinc-950 border-zinc-800 h-11 pr-10"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPass(!showPass)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
                   >
                     {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                className="w-full h-11 text-base font-medium"
-                disabled={loading}
-              >
+              <Button type="submit" className="w-full h-11" disabled={loading}>
                 {loading ? "Creating account..." : "Create Account"}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm text-zinc-500">
               Already have an account?{" "}
-              <Link
-                href="/sign-in"
-                className="text-blue-500 hover:underline font-medium"
-              >
+              <Link href="/sign-in" className="text-blue-500 hover:underline">
                 Sign in
               </Link>
             </div>

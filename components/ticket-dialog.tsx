@@ -148,7 +148,7 @@ export function TicketDialog({
               placeholder="Add more detail to this ticket..."
               rows={4}
               onChange={(e) => setDescription(e.target.value)}
-              className="max-h-40 resize-none break-words"
+              className="max-h-40 resize-none wrap-break-word"
             />
           </div>
 
@@ -182,7 +182,10 @@ export function TicketDialog({
 
             <div className="flex flex-col gap-1.5">
               <Label>Assignee</Label>
-              <Select value={assignee} onValueChange={(v) => setAssignee(v ?? UNASSIGNED)}>
+              <Select
+                value={assignee}
+                onValueChange={(v) => setAssignee(v ?? UNASSIGNED)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>

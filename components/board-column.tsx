@@ -92,18 +92,23 @@ export function BoardColumnView({
               <MoreHorizontal className="size-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-44">
-              <DropdownMenuItem onSelect={() => setEditing(true)}>
+              <DropdownMenuItem onClick={() => setEditing(true)}>
                 <Pencil className="size-4" />
                 Rename
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => onAddTicket(column.id)}>
+              <DropdownMenuItem onClick={() => onAddTicket(column.id)}>
                 <Plus className="size-4" />
                 Add ticket
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 variant="destructive"
-                onSelect={() => deleteColumn(column.id)}
+                onClick={(e) => {
+                  e.preventDefault();
+
+                  console.log("DELETE CLICKED");
+                  deleteColumn(column.id);
+                }}
               >
                 <Trash2 className="size-4" />
                 Delete column

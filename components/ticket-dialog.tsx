@@ -197,7 +197,7 @@ export function TicketDialog({
                     </span>
                   </SelectItem>
                   {projectMembersList.map((u) => (
-                    <SelectItem key={u.id} value={String(u.id)}>
+                    <SelectItem key={u.id} value={String(u.name)}>
                       <span className="flex items-center gap-2">
                         <UserAvatar user={u} size="xs" />
                         {u.name ?? u.email}

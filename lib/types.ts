@@ -44,4 +44,15 @@ export interface Ticket {
   key: string;
   createdAt: string;
   updatedAt: string;
+  attachments?: TicketAttachment[];
+}
+
+export interface TicketAttachment {
+  id: number;
+  ticketId: number;
+  fileName: string;
+  mimeType: string;
+  size: number;
+  createdAt: string;
+  uploadedById: number;
 }

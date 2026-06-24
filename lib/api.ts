@@ -131,6 +131,7 @@ export async function createTicket(
 
 export async function updateTicket(ticketId: number, patch: any) {
   const token = await getToken();
+
   const res = await fetch(`${API_BASE}/tickets/${ticketId}`, {
     method: "PATCH",
     headers: {
@@ -139,8 +140,11 @@ export async function updateTicket(ticketId: number, patch: any) {
     },
     body: JSON.stringify(patch),
   });
+
   if (!res.ok) throw new Error("Failed to update ticket");
-  return res.json();
+
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
 }
 
 export async function deleteTicket(id: number) {
@@ -173,4 +177,60 @@ export async function getProjectMembers(projectId: number) {
   });
   if (!res.ok) throw new Error("Failed to fetch members");
   return res.json();
+}
+
+export async function uploadAttachment(ticketId: number, file: File) {
+  const token = await getToken();
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(`${API_BASE}/tickets/${ticketId}/attachments`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Upload error response:", text);
+    throw new Error(text);
+  }
+  return res.json();
+}
+
+export async function getTicketAttachments(ticketId: number) {
+  const token = await getToken();
+  const res = await fetch(`${API_BASE}/tickets/${ticketId}/attachments`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Fetch attachments error response:", text);
+    throw new Error(text);
+  }
+  return res.json();
+}
+
+export function getAttachmentPreviewUrl(attachmentId: number) {
+  return `${API_BASE}/tickets/attachments/${attachmentId}/preview`;
+}
+
+export async function getAttachmentPreviewBlob(attachmentId: number) {
+  const token = await getToken();
+
+  const res = await fetch(
+    `${API_BASE}/tickets/attachments/${attachmentId}/preview`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Preview error:", text);
+    throw new Error("Failed to load preview");
+  }
+
+  return await res.blob();
 }

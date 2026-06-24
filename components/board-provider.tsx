@@ -18,6 +18,7 @@ interface NewTicketInput {
   assigneeId?: number | null;
   priority?: TicketPriority;
 }
+
 interface InviteResponse {
   ok: boolean;
   message: string;
@@ -38,8 +39,8 @@ interface BoardContextValue {
   ticketsByColumn: (columnId: number) => Ticket[];
 
   createProject: (name: string, description?: string) => void;
-  addTicket: (input: NewTicketInput) => void;
-  updateTicket: (id: number, patch: Partial<Ticket>) => void;
+  addTicket: (input: NewTicketInput) => Promise<Ticket>;
+  updateTicket: (id: number, patch: Partial<Ticket>) => Promise<any>;
   deleteTicket: (id: number) => void;
   moveTicket: (ticketId: number, toColumnId: number, toIndex: number) => void;
   addColumn: (title: string) => void;
@@ -178,7 +179,6 @@ export function BoardProvider({
       await queryClient.invalidateQueries({
         queryKey: ["members", activeProjectId],
       });
-      console.log("Members invalidated");
     },
   });
 
@@ -200,14 +200,18 @@ export function BoardProvider({
 
     createProject: (name, description) =>
       createProjectMutation.mutate({ name, description }),
+
     addColumn: (title) => addColumnMutation.mutate(title),
     renameColumn: (id, title) => renameColumnMutation.mutate({ id, title }),
     deleteColumn: (id) => deleteColumnMutation.mutate(id),
-    addTicket: (input) => addTicketMutation.mutate(input),
-    updateTicket: (id, patch) => updateTicketMutation.mutate({ id, patch }),
+    addTicket: (input) => addTicketMutation.mutateAsync(input),
+    updateTicket: (id, patch) =>
+      updateTicketMutation.mutateAsync({ id, patch }),
+
     deleteTicket: (id) => deleteTicketMutation.mutate(id),
     moveTicket: (ticketId, toColumnId, toIndex) =>
       moveTicketMutation.mutate({ ticketId, toColumnId, toIndex }),
+
     inviteMember: (id, email) =>
       inviteMemberMutation.mutateAsync({ activeProjectId: id, email }),
   };
